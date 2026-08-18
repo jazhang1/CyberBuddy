@@ -12,21 +12,24 @@ create table if not exists public.background_answers (
 alter table public.background_answers enable row level security;
 
 -- authenticated users may only read their own row
-create policy if not exists "background_answers_select_own"
+drop policy if exists "background_answers_select_own" on public.background_answers;
+create policy "background_answers_select_own"
   on public.background_answers
   for select
   to authenticated
   using (auth.uid() = user_id);
 
 -- authenticated users may only create their own row
-create policy if not exists "background_answers_insert_own"
+drop policy if exists "background_answers_insert_own" on public.background_answers;
+create policy "background_answers_insert_own"
   on public.background_answers
   for insert
   to authenticated
   with check (auth.uid() = user_id);
 
 -- authenticated users may only update their own row
-create policy if not exists "background_answers_update_own"
+drop policy if exists "background_answers_update_own" on public.background_answers;
+create policy "background_answers_update_own"
   on public.background_answers
   for update
   to authenticated
@@ -34,7 +37,8 @@ create policy if not exists "background_answers_update_own"
   with check (auth.uid() = user_id);
 
 -- authenticated users may only delete their own row
-create policy if not exists "background_answers_delete_own"
+drop policy if exists "background_answers_delete_own" on public.background_answers;
+create policy "background_answers_delete_own"
   on public.background_answers
   for delete
   to authenticated
