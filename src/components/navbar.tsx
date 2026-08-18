@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import type { MouseEvent } from "react";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
+import { useIsAdmin } from "~/hooks/use-is-admin";
 import { useUser } from "~/hooks/use-user";
 import { createClient } from "~/lib/supabase/client";
 
 export function Navbar() {
   const router = useRouter();
   const { user, loading } = useUser();
+  const { isAdmin } = useIsAdmin();
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -38,6 +40,11 @@ export function Navbar() {
               Questions
             </Link>
           </Button>
+          {isAdmin && (
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/admin">Admin</Link>
+            </Button>
+          )}
         </div>
         <div className="flex items-center gap-3">
           {loading ? (
