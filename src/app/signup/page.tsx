@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
+import { GoogleSignInButton } from "~/components/google-sign-in-button";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -13,6 +14,7 @@ import {
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { Separator } from "~/components/ui/separator";
 import { createClient } from "~/lib/supabase/client";
 
 export default function SignupPage() {
@@ -75,6 +77,14 @@ export default function SignupPage() {
           <CardDescription>Start your path with CyberBuddy.</CardDescription>
         </CardHeader>
         <CardContent>
+          <GoogleSignInButton />
+
+          <div className="my-4 flex items-center gap-3">
+            <Separator className="flex-1" />
+            <span className="text-xs text-muted-foreground">OR</span>
+            <Separator className="flex-1" />
+          </div>
+
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="email">Email</Label>

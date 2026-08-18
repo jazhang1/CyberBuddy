@@ -28,9 +28,14 @@ export function Navbar() {
           {loading ? (
             <Skeleton className="h-8 w-20" />
           ) : user ? (
-            <Button variant="outline" size="sm" onClick={handleSignOut}>
-              Sign out
-            </Button>
+            <>
+              <span className="hidden max-w-40 truncate text-sm text-muted-foreground sm:inline">
+                {user.email}
+              </span>
+              <Button variant="outline" size="sm" onClick={handleSignOut}>
+                Sign out
+              </Button>
+            </>
           ) : (
             <>
               <Button variant="ghost" size="sm" asChild>
