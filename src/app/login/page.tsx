@@ -30,19 +30,27 @@ export default function LoginPage() {
     setLoading(true);
 
     const supabase = createClient();
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    setLoading(false);
+    const { data, error: signInError } = await supabase.auth.signInWithPassword(
+      {
+        email,
+        password,
+      },
+    );
 
     if (signInError) {
+      setLoading(false);
       setError(signInError.message);
       return;
     }
 
-    router.push("/");
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("onboarding_completed_at")
+      .eq("id", data.user.id)
+      .maybeSingle();
+
+    setLoading(false);
+    router.push(profile?.onboarding_completed_at ? "/" : "/onboarding");
     router.refresh();
   }
 

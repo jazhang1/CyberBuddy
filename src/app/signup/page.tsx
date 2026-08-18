@@ -35,7 +35,7 @@ export default function SignupPage() {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent("/onboarding")}`,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
 
@@ -77,7 +77,7 @@ export default function SignupPage() {
           <CardDescription>Start your path with CyberBuddy.</CardDescription>
         </CardHeader>
         <CardContent>
-          <GoogleSignInButton nextPath="/onboarding" />
+          <GoogleSignInButton />
 
           <div className="my-4 flex items-center gap-3">
             <Separator className="flex-1" />
