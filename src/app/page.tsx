@@ -53,9 +53,7 @@ export default function Home() {
         {steps.map((step) => (
           <div key={step.title} className="flex flex-col gap-1.5">
             <p className="font-semibold">{step.title}</p>
-            <p className="text-sm text-muted-foreground">
-              {step.description}
-            </p>
+            <p className="text-sm text-muted-foreground">{step.description}</p>
           </div>
         ))}
       </section>
