@@ -29,6 +29,9 @@ export function Navbar() {
             <Skeleton className="h-8 w-20" />
           ) : user ? (
             <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/questions">Questions</Link>
+              </Button>
               <span className="hidden max-w-40 truncate text-sm text-muted-foreground sm:inline">
                 {user.email}
               </span>
