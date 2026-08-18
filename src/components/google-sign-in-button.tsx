@@ -5,7 +5,7 @@ import { GoogleIcon } from "~/components/google-icon";
 import { Button } from "~/components/ui/button";
 import { createClient } from "~/lib/supabase/client";
 
-export function GoogleSignInButton() {
+export function GoogleSignInButton({ nextPath = "/" }: { nextPath?: string }) {
   const [loading, setLoading] = useState(false);
 
   async function handleClick() {
@@ -15,7 +15,7 @@ export function GoogleSignInButton() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}`,
       },
     });
   }
