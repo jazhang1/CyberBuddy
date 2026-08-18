@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import type { MouseEvent } from "react";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useUser } from "~/hooks/use-user";
@@ -18,20 +19,31 @@ export function Navbar() {
     router.refresh();
   }
 
+  function handleQuestionsClick(event: MouseEvent) {
+    if (!loading && !user) {
+      event.preventDefault();
+      router.push("/login");
+    }
+  }
+
   return (
     <nav className="border-b border-border bg-background">
       <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
-        <Link href="/" className="font-semibold tracking-tight">
-          CyberBuddy
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href="/" className="font-semibold tracking-tight">
+            CyberBuddy
+          </Link>
+          <Button variant="ghost" size="sm" asChild>
+            <Link href="/questions" onClick={handleQuestionsClick}>
+              Questions
+            </Link>
+          </Button>
+        </div>
         <div className="flex items-center gap-3">
           {loading ? (
             <Skeleton className="h-8 w-20" />
           ) : user ? (
             <>
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/questions">Questions</Link>
-              </Button>
               <span className="hidden max-w-40 truncate text-sm text-muted-foreground sm:inline">
                 {user.email}
               </span>
