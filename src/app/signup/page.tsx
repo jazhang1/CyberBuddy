@@ -47,7 +47,7 @@ export default function SignupPage() {
     }
 
     if (data.session) {
-      router.push("/onboarding");
+      router.push("/questions");
       router.refresh();
       return;
     }

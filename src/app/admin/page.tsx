@@ -11,7 +11,7 @@ import {
 } from "~/components/ui/card";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useIsAdmin } from "~/hooks/use-is-admin";
-import { useUser } from "~/hooks/use-user";
+import { useRequireUser } from "~/hooks/use-require-user";
 import { createClient } from "~/lib/supabase/client";
 
 interface Answers {
@@ -29,16 +29,10 @@ interface UserRow {
 
 export default function AdminPage() {
   const router = useRouter();
-  const { user, loading: userLoading } = useUser();
+  const { user, loading: userLoading } = useRequireUser();
   const { isAdmin, loading: adminLoading } = useIsAdmin();
   const [rows, setRows] = useState<UserRow[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!userLoading && !user) {
-      router.push("/login");
-    }
-  }, [userLoading, user, router]);
 
   useEffect(() => {
     if (!adminLoading && user && !isAdmin) {
