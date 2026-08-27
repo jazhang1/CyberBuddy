@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getPostAuthRedirectPath } from "~/lib/post-auth-redirect";
 import { createClient } from "~/lib/supabase/server";
 
 export async function GET(request: Request) {
@@ -7,25 +8,14 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      const { data: userData } = await supabase.auth.getUser();
-      const userId = userData.user?.id;
+      const path = data.user
+        ? await getPostAuthRedirectPath(supabase, data.user.id)
+        : "/questions";
 
-      let onboardingCompleted = false;
-      if (userId) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("onboarding_completed_at")
-          .eq("id", userId)
-          .maybeSingle();
-        onboardingCompleted = Boolean(profile?.onboarding_completed_at);
-      }
-
-      return NextResponse.redirect(
-        `${origin}${onboardingCompleted ? "/" : "/onboarding"}`,
-      );
+      return NextResponse.redirect(`${origin}${path}`);
     }
   }
 

@@ -15,6 +15,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Separator } from "~/components/ui/separator";
+import { getPostAuthRedirectPath } from "~/lib/post-auth-redirect";
 import { createClient } from "~/lib/supabase/client";
 
 export default function LoginPage() {
@@ -43,14 +44,10 @@ export default function LoginPage() {
       return;
     }
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("onboarding_completed_at")
-      .eq("id", data.user.id)
-      .maybeSingle();
+    const redirectPath = await getPostAuthRedirectPath(supabase, data.user.id);
 
     setLoading(false);
-    router.push(profile?.onboarding_completed_at ? "/" : "/onboarding");
+    router.push(redirectPath);
     router.refresh();
   }
 
