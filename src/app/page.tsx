@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Button } from "~/components/ui/button";
 
 const steps = [
@@ -17,6 +21,39 @@ const steps = [
 ];
 
 export default function Home() {
+  const router = useRouter();
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
+  // TEMPORARY: a direct-to-checkout button for testing the Stripe
+  // subscription flow. Remove once real premium-gating UX is in place.
+  async function handleUpgradeClick() {
+    setCheckoutError(null);
+    setCheckoutLoading(true);
+
+    try {
+      const res = await fetch("/api/stripe/checkout", { method: "POST" });
+
+      if (res.status === 401) {
+        router.push("/login");
+        return;
+      }
+
+      const body = await res.json();
+
+      if (!res.ok || !body.url) {
+        setCheckoutError(body.error ?? "Failed to start checkout.");
+        return;
+      }
+
+      window.location.href = body.url;
+    } catch {
+      setCheckoutError("Something went wrong. Please try again.");
+    } finally {
+      setCheckoutLoading(false);
+    }
+  }
+
   return (
     <main className="flex min-h-[calc(100vh-3.5rem)] flex-col">
       <section className="border-b border-border bg-gradient-to-b from-muted/60 to-background px-6 py-24 sm:py-28">
@@ -36,13 +73,18 @@ export default function Home() {
             <Button size="lg" asChild>
               <Link href="/start">Get my first steps</Link>
             </Button>
-            <Link
-              href="#how-it-works"
-              className="text-sm font-medium underline underline-offset-4 hover:text-foreground"
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={handleUpgradeClick}
+              disabled={checkoutLoading}
             >
-              See how it works
-            </Link>
+              {checkoutLoading ? "Redirecting..." : "Upgrade to Premium"}
+            </Button>
           </div>
+          {checkoutError && (
+            <p className="text-sm text-destructive">{checkoutError}</p>
+          )}
         </div>
       </section>
 
